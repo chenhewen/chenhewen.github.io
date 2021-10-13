@@ -1,3 +1,5 @@
+"use strict"
+
 import * as md5Alg from "/js/md5.js"
 
 function countVisitor(namespace, key) {
