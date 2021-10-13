@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hello World | 陈鹤文</title>
+  <title>Hello World</title>
   <meta name="author" content="chenhewen">
   
   <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in ">
@@ -23,25 +23,28 @@
 <link rel="stylesheet" href="/css/style.css">
 
   <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
-  
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=G-TVLSTY03LE"></script>
-	<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-
-	gtag('config', 'G-TVLSTY03LE');
-	</script>
-
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MSHF47K');
+</script>
+<!-- End Google Tag Manager -->
 
 <meta name="generator" content="Hexo 5.4.0"></head>
 
 
 <body>
+  <!-- Google Tag Manager (noscript) -->
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MSHF47K"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
   <header id="header" class="inner"><div class="alignleft">
   <h1><a href="/">陈鹤文</a></h1>
-  <h2><a href="/"></a></h2>
+  <h2><a href="/">技术，产品，营销，商业</a></h2>
 </div>
 <nav id="main-nav" class="alignright">
   <ul>
@@ -93,6 +96,24 @@
         
         
         
+        <div id="visitor_count_container" class="onflight">
+    <img id="visitor_eye" src="/image/eye.svg">
+    <bold id="visitor_count"></bold>
+</div>
+<script type="module">
+    import * as md5Alg from "/js/md5.js"
+    let xhr = new XMLHttpRequest();
+    let permalink_md5 = md5Alg.md5("https://www.chenhewen.me/2021/10/07/hello-world/");
+    let url = `https://api.countapi.xyz/hit/www.chenhewen.me/${permalink_md5}`
+    xhr.open("GET", url);
+    xhr.responseType = "json";
+    xhr.onload = function() {
+        document.getElementById('visitor_count').innerText = this.response.value;
+        let container = document.getElementById('visitor_count_container')
+        container.classList.remove("onflight");
+        container.classList.add("done");
+    }
+</script>
       
       <div class="clearfix"></div>
     </footer>
@@ -138,6 +159,9 @@
 
 
 <script src="/js/gallery.js"></script>
+
+
+<script src="/js/md5.js" type="module"></script>
 
 
 
