@@ -5,11 +5,11 @@ import * as md5Alg from "/js/md5.js"
 function countVisitor(namespace, key) {
     let xhr = new XMLHttpRequest();
     let permalink_md5 = md5Alg.md5(key);
-    let url = `https://api.countapi.xyz/hit/${namespace}/${permalink_md5}`
-    xhr.open("GET", url);
-    xhr.responseType = "json";
+    let url = `https://api.chenqingze.com/visitor-count/${namespace}/${permalink_md5}`
+    xhr.open("PUT", url);
+    xhr.responseType = "text/plain";
     xhr.onload = function() {
-        visitor_count_view.innerText = this.response.value;
+        visitor_count_view.innerText = this.response;
         container_view.classList.remove("onflight");
         container_view.classList.add("done");
     }
