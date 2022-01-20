@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>AWS上安装Shadowsocks server</title>
+  <meta name="author" content="chenhewen">
+  
+  <meta name="description" content="由于我的AWS还在一年试用期，所以才折腾一下，否则，省不了几美元。">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="AWS上安装Shadowsocks server"/>
+  <meta property="og:site_name" content="陈鹤文"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/images/favicon_64.png">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">陈鹤文</a></h1>
+  <h2><a href="/">记录工作生活的点点滴滴</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-aws-shadowsocks" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2022-01-20T05:58:35.000Z"><a href="/2022/01/20/aws-shadowsocks/">2022-01-20</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">AWS上安装Shadowsocks server</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>由于我的AWS还在一年试用期，所以才折腾一下，否则，省不了几美元。</p>
+<span id="more"></span>
+<h1 id="AWS上运行EC2实例"><a href="#AWS上运行EC2实例" class="headerlink" title="AWS上运行EC2实例"></a>AWS上运行EC2实例</h1><p>（过程略）</p>
+<h1 id="SSH登录Ubuntu"><a href="#SSH登录Ubuntu" class="headerlink" title="SSH登录Ubuntu"></a>SSH登录Ubuntu</h1><p>（过程略）</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>参考： <a target="_blank" rel="noopener" href="https://www.linuxbabe.com/linux-server/setup-your-own-shadowsocks-server-on-debian-ubuntu-centos">https://www.linuxbabe.com/linux-server/setup-your-own-shadowsocks-server-on-debian-ubuntu-centos</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo apt update</span><br><span class="line"></span><br><span class="line">sudo apt install python3-pip</span><br><span class="line">sudo apt-get install python-m2crypto</span><br><span class="line"></span><br><span class="line">sudo pip install shadowsocks</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/shadowsocks.json</span><br></pre></td></tr></table></figure>
+
+<p>在打开的文件中输入如下配置，“server”字段不必更改。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;server&quot;:&quot;0.0.0.0&quot;,</span><br><span class="line">&quot;server_port&quot;:16000,</span><br><span class="line">&quot;local_port&quot;:1080,</span><br><span class="line">&quot;password&quot;:&quot;[your password]&quot;,</span><br><span class="line">&quot;timeout&quot;:600,</span><br><span class="line">&quot;method&quot;:&quot;aes-256-cfb&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="一个bug的修复"><a href="#一个bug的修复" class="headerlink" title="一个bug的修复"></a>一个bug的修复</h1><p>此时如何启动shadowsocks server会出现bug，bug及解决<br>参考： <a target="_blank" rel="noopener" href="https://www.yangyang.cloud/blog/2020/09/23/solved-shadowsocks-undefined-symbol/">https://www.yangyang.cloud/blog/2020/09/23/solved-shadowsocks-undefined-symbol/</a></p>
+<p>运行下面代码解决</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo sed -i &#x27;s/EVP_CIPHER_CTX_cleanup/EVP_CIPHER_CTX_reset/g&#x27; /usr/local/lib/python3.8/dist-packages/shadowsocks/crypto/openssl.py</span><br></pre></td></tr></table></figure>
+
+<h1 id="运行、停止、重启、自启相关"><a href="#运行、停止、重启、自启相关" class="headerlink" title="运行、停止、重启、自启相关"></a>运行、停止、重启、自启相关</h1><p>只需运行启动相关代码即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#启动shadowsocks</span><br><span class="line">sudo ssserver -c /etc/shadowsocks.json -d start</span><br><span class="line"></span><br><span class="line">#停止shadowsocks</span><br><span class="line">sudo ssserver -d stop</span><br><span class="line"></span><br><span class="line">#重新启动shadowsocks</span><br><span class="line">sudo ssserver -c /etc/shadowsocks.json -d restart</span><br><span class="line"></span><br><span class="line">#查看shadowsocks日志</span><br><span class="line">less /var/log/shadowsocks.log</span><br><span class="line"></span><br><span class="line">配置shadowsocks server开机自启动</span><br><span class="line">sudo vi /etc/rc.local</span><br><span class="line">/usr/bin/python /usr/local/bin/ssserver -c /etc/shadowsocks.json -d start</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置安全组"><a href="#配置安全组" class="headerlink" title="配置安全组"></a>配置安全组</h1><p>配置TCP, UDP, SSH的入站安全组（过程略）</p>
+<h1 id="shadowsocks客户端配置"><a href="#shadowsocks客户端配置" class="headerlink" title="shadowsocks客户端配置"></a>shadowsocks客户端配置</h1><p>注意配置ip要去EC2控制台找公开ip，不要拷贝错了，密码和加密方式要和server配置相一致。（过程略）</p>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ol>
+<li>请选择合适的EC2实例，最低配就够用了。</li>
+<li>如果超过了AWS的试用期，可能自己搭建服务器价格与第三方价格就差不多了，我之前就是购买的市面上的，每个月5美元左右。如果购买第三方的，建议按月购买。</li>
+<li>搭建好后，不要使用磁力链接下载，可能封ip（不太了解如何规避）。不小心使用后，重启一下实例，用新的ip重新配置一下客户端。</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+        
+        <div id="visitor_count_container" class="onflight">
+    <img id="visitor_eye" src="/image/eye.svg">
+    <bold id="visitor_count" 
+        data-namespace="www.chenhewen.me"
+        data-key="https://www.chenhewen.me/2022/01/20/aws-shadowsocks/">
+    </bold>
+</div>
+
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+<div class="utterances"></div>
+ 
+  <script src="https://utteranc.es/client.js"
+        repo="chenhewen/chenhewen.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+ 
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="www.chenhewen.me">
+  </form>
+</div>
+
+
+  
+
+  
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 chenhewen
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
